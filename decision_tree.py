@@ -4,7 +4,6 @@ from __future__ import annotations
 import csv
 from typing import Any, Optional
 
-from python_ta.contracts import check_contracts
 
 
 # @check_contracts - We are commenting this out, so it doesn't slow down the code for Part 1.2
@@ -163,83 +162,48 @@ class Tree:
 # Part 1.2 Decision trees
 ################################################################################
 
+# Poster_Link,Series_Title,Released_Year,Certificate,Runtime,Genre,IMDB_Rating,Overview,Meta_score,Director,Star1,Star2,Star3,Star4,No_of_Votes,Gross
 
-@check_contracts
-def build_decision_tree(file: str) -> Tree:
-    """Build a decision tree storing the animal data from the given file.
 
-    Preconditions:
-        - file is the path to a csv file in the format of the provided animals.csv
+def process_movies(file: str) -> list:
+    """
+    This function will process the file data, creat and return a list of movie dictionary objects which will them be
+    used to filter for user's specific requests.
     """
     tree = Tree('', [])  # The start of a decision tree
-
-    with open(file) as csv_file:
-        reader = csv.reader(csv_file)
+    movies = []
+    with open(file, encoding="utf-8") as csv_file:
+        reader = csv.DictReader(csv_file)
         next(reader)  # skip the header row
 
         for row in reader:
-            value = row
-            x = value.pop(0)
-            value.append(x)
-            tree.insert_sequence(value)
+            try:
+                movie = {
+                    "Title": row["Series_Title"],
+                    "Genre": row["Genre"].split(", "),  # Use first genre (for simplicity)
+                    "IMDB_Rating": float(row["IMDB_Rating"]) if row["IMDB_Rating"] else 0,
+                    "Runtime": int(row["Runtime"].replace(" min", "")) if row["Runtime"] else 0,
+                    "Director": row["Director"],
+                    "Meta_score": float(row["Meta_score"]) if row["Meta_score"] else 0,
+                    "Stars": [row["Star1"], row["Star2"], row["Star3"], row["Star4"]]  # Choose one main actor for feature
+                }
+                movies.append(movie)
+            except (Exception,):
+                continue
 
-    return tree
-
-# P = true/false choice, M = multiple voices
-QUESTIONS = [
-    ('What genre?', "P"),
-     ('Over 2-hours?', "M"),
-]
-
-
-@check_contracts
-def get_user_input(questions: list[str]) -> list[bool]:
-    """Return the user's answers to a list of Yes/No questions."""
-    answers_so_far = []
-
-    for question in questions:
-        print(question)
-        s = input('Y/N: ')
-        answers_so_far.append(s == 'Y')  # Any other input is interpreted as False
-
-    return answers_so_far
+    return movies
 
 
-@check_contracts
-def run_animal_guesser(animal_file: str) -> None:
-    """Run an animal guessing program based on the given animal data file.
+def get_exact(lst: list) -> list:
 
-    This function should:
-        1. Create a decision tree based on the given animal file.
-        2. Prompt the user for their desired animal characteristics (use `get_user_input(ANIMAL_QUESTIONS)`)
-        3. Traverse the decision tree to determine the possible animals(s) that match
-           the user's inputs. You will likely need to implement a new Tree method to
-           accomplish this part.
-        4. Print the results back to the user. This might be "no animals", an exact match
-           (one animal), or multiple animals. You can choose the exact messages you print.
-    """
-    tree = build_decision_tree(animal_file)
-    user_inputs = get_user_input(ANIMAL_QUESTIONS)
-    matching_animals = tree.traverse(user_inputs)
 
-    print(matching_animals)
-    if not matching_animals:
-        print("No animals.")
-    elif len(matching_animals) == 1:
-        print(f"The animal is {matching_animals[0]}.")
-    else:
-        print(f"The possible animals are: {', '.join(matching_animals)}.")
+
+
+    return []
+
+
 
 
 if __name__ == '__main__':
-
-    import doctest
-    doctest.testmod(verbose=True)
-
-
-    import python_ta
-    python_ta.check_all('ex2_part1.py', config={
-        'max-line-length': 120,
-        'extra-imports': ['csv', 'random'],
-        'allowed-io': ['build_decision_tree', 'get_user_input', 'run_animal_guesser']
-    })
+    data = process_movies("Movies.csv")
+    print(data[:5])
