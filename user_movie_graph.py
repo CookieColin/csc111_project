@@ -80,7 +80,7 @@ def find_similar_users(G, target_user, top_n=3):
 
     Parameters:
         G (nx.Graph): The user-movie graph
-        target_user (str): The user to compare others against
+        target_user (int): The user to compare others against
         top_n (int): Number of similar users to return
 
     Returns:
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     print("🔗 Number of edges:", G.number_of_edges())
 
     # 3. Select a target user
-    target_user = "U1"  # Or use input("Enter target user ID: ")
+   target_user = input("🔍 Enter a user ID (e.g., 1): ").strip()
 
     # 4. Find similar users
     similar = find_similar_users(G, target_user)
