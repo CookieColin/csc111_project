@@ -1,7 +1,6 @@
 import csv
 import networkx as nx
-from plotly.graph_objs import Scatter, Figure   
-
+from plotly.graph_objs import Scatter, Figure
 
 def load_user_movie_data(file_path="ratings.csv"):
     """Read user-movie rating data from a CSV file.
@@ -80,6 +79,7 @@ def recommend_movies(G, target_user, top_n=3):
             movie_scores[movie] += similarity * rating
     sorted_movies = sorted(movie_scores.items(), key=lambda x: x[1], reverse=True)
     return sorted_movies[:top_n]
+
 def visualize_graph_plotly(G: nx.Graph, target_user=None, output_file=''):
     pos = nx.spring_layout(G, seed=42)
 
@@ -145,7 +145,7 @@ def visualize_graph_plotly(G: nx.Graph, target_user=None, output_file=''):
         fig.show()
 
 if __name__ == "__main__":
-    data = load_user_movie_data("user_movie_ratings.csv")
+    data = load_user_movie_data("ratings.csv")
     G = build_user_movie_graph(data)
 
     print("✅ Graph built!")
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     print(f"\n🎬 Recommended movies for {target_user}:")
     for movie, score in recommendations:
         print(f"  {movie} (score: {score:.2f})")
-        
-visualize_graph_plotly(G, target_user)     
+
+    visualize_graph_plotly(G, target_user)
 
 
