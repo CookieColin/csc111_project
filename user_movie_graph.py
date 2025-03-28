@@ -3,7 +3,7 @@ import networkx as nx
 from plotly.graph_objs import Scatter, Figure   
 
 
-def load_user_movie_data(file_path="user_movie_ratings.csv"):
+def load_user_movie_data(file_path="ratings.csv"):
     """Read user-movie rating data from a CSV file.
     Each row in the CSV should contain: User_ID, Movie_Title, Rating, Genre
     Returns a list of dictionaries.
