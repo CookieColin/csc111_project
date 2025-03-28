@@ -79,9 +79,69 @@ def recommend_movies(G, target_user, top_n=3):
             movie_scores[movie] += similarity * rating
     sorted_movies = sorted(movie_scores.items(), key=lambda x: x[1], reverse=True)
     return sorted_movies[:top_n]
+def visualize_graph_plotly(G: nx.Graph, target_user=None, output_file=''):
+    pos = nx.spring_layout(G, seed=42)
 
+    x_nodes = []
+    y_nodes = []
+    labels = []
+    colors = []
 
+    for node in G.nodes:
+        x, y = pos[node]
+        x_nodes.append(x)
+        y_nodes.append(y)
+        labels.append(node)
 
+        if node == target_user:
+            colors.append('red')
+        elif G.nodes[node]['type'] == 'user':
+            colors.append('blue')
+        else:
+            colors.append('green')
+
+    x_edges = []
+    y_edges = []
+
+    for u, v in G.edges:
+        x_edges += [pos[u][0], pos[v][0], None]
+        y_edges += [pos[u][1], pos[v][1], None]
+
+    edge_trace = Scatter(
+        x=x_edges,
+        y=y_edges,
+        line=dict(width=1, color='lightgray'),
+        hoverinfo='none',
+        mode='lines'
+    )
+
+    node_trace = Scatter(
+        x=x_nodes,
+        y=y_nodes,
+        mode='markers',
+        marker=dict(
+            size=10,
+            color=colors,
+            line=dict(width=1, color='black')
+        ),
+        text=labels,
+        hoverinfo='text'
+    )
+
+    fig = Figure(data=[edge_trace, node_trace])
+    fig.update_layout(
+        title='🎬 User-Movie Recommendation Graph',
+        showlegend=False,
+        xaxis=dict(showgrid=False, zeroline=False, visible=False),
+        yaxis=dict(showgrid=False, zeroline=False, visible=False),
+        margin=dict(t=40, l=10, r=10, b=10)
+    )
+
+    if output_file:
+        fig.write_html(output_file)
+        print(f"📄 Saved plot as {output_file}")
+    else:
+        fig.show()
 
 if __name__ == "__main__":
     data = load_user_movie_data("user_movie_ratings.csv")
@@ -101,5 +161,7 @@ if __name__ == "__main__":
     print(f"\n🎬 Recommended movies for {target_user}:")
     for movie, score in recommendations:
         print(f"  {movie} (score: {score:.2f})")
+        
+visualize_graph_plotly(G, target_user)     
 
 
