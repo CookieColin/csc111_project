@@ -186,7 +186,8 @@ class MovieRecommender:
         movie_scores = {}
 
         for similar_user_id, similarity in similar_users:
-            for movie in self.users[similar_user_id].watched_movies:
+            similar_users_id_int = int(similar_user_id)
+            for movie in self.users[similar_users_id_int].watched_movies:
                 if movie not in self.current_user.watched_movies:
                     movie_scores[movie] = movie_scores.get(movie, 0) + similarity * movie.rating
 
