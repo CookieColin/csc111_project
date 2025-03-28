@@ -1,6 +1,7 @@
-import matplotlib.pyplot as plt
 import csv
 import networkx as nx
+from plotly.graph_objs import Scatter, Figure   
+
 
 def load_user_movie_data(file_path="user_movie_ratings.csv"):
     """Read user-movie rating data from a CSV file.
