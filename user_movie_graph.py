@@ -31,11 +31,18 @@ def build_user_movie_graph(user_movie_data):
     """Construct a user-movie graph using networkx."""
     G = nx.Graph()
     for entry in user_movie_data:
-        user = entry["user"]
-        movie = entry["movie"]
-        rating = entry["rating"]
 
-        genre = entry["genre"]
+        if isinstance(entry, dict):
+            user = entry["user"]
+            movie = entry["movie"]
+            rating = entry["rating"]
+            genre = entry["genre"]
+        else:
+            user = entry[0]
+            movie = entry[1]
+            rating = entry[2]
+            genre = entry[3]
+
         if not G.has_node(user):
             G.add_node(user, type="user")
         if not G.has_node(movie):
@@ -165,5 +172,3 @@ if __name__ == "__main__":
         print(f"  {movie} (score: {score:.2f})")
 
     visualize_graph_plotly(G, target_user)
-
-
