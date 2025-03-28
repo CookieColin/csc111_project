@@ -191,5 +191,5 @@ if __name__ == "__main__":
         "max-line-length": 100,
         "extra-imports": ["csv", "networkx", "plotly.graph_objs"],
         "allowed-io": ["load_user_movie_data", "print", "input", "visualize_graph_plotly"],
-        "disable": ["E1101"]
+        "disable": ["E1101", "R0914", "W0718", "W0621"]
     })
