@@ -34,6 +34,7 @@ def build_user_movie_graph(user_movie_data):
         user = entry["user"]
         movie = entry["movie"]
         rating = entry["rating"]
+
         genre = entry["genre"]
         if not G.has_node(user):
             G.add_node(user, type="user")
