@@ -139,16 +139,17 @@ class MovieRecommender:
                     if not year.strip().isdigit():
                         print(f"Skipping invalid row (year='{row[2]}'): {row[1]}")
                         continue
-                    self.movies[title] = Movie(
-                        title=title,
-                        year=int(year),
-                        length=int(str(length).replace("min", "")),
-                        genre=genre,
-                        rating=float(rating),
-                        director=director,
-                        lead_actors=[str(actor1), str(actor2), str(actor3), str(actor4)],
-                        votes=int(votes)
-                    )
+                    else:
+                        self.movies[title] = Movie(
+                            title=title,
+                            year=int(year) if isinstance(year, int) else 0,
+                            length=int(str(length).replace("min", "")),
+                            genre=genre,
+                            rating=float(rating),
+                            director=director,
+                            lead_actors=[str(actor1), str(actor2), str(actor3), str(actor4)],
+                            votes=int(votes)
+                        )
             ratings = []
             with open(ratings_file, 'r', encoding="utf-8") as f:
                 reader = csv.reader(f)
@@ -156,8 +157,8 @@ class MovieRecommender:
                 for row in reader:
                     if len(row) != 4:
                         raise ValueError(f"Expected 4 columns in ratings.csv, got{len(row)}")
-                    user_id, movie_title, rating, _ = int(row[0]), str(row[1]), float(row[2]), row[3]
-                    ratings.append((user_id, movie_title, rating))
+                    user_id, movie_title, rating, genre = int(row[0]), str(row[1]), float(row[2]), row[3].split(', ')[0]
+                    ratings.append((user_id, movie_title, rating, genre))
                     if user_id not in self.users:
                         self.users[user_id] = User(user_id, set())
                     if movie_title in self.movies:
@@ -268,7 +269,8 @@ class MovieRecommender:
 
 if __name__ == "__main__":
     recommender = MovieRecommender(movies={}, users={}, current_user=None)
-
+    recommender.load_data("Movies.csv", "ratings.csv")
+    recommender.interactive_session()
     try:
         recommender.load_data("Movies.csv", "ratings.csv")
         recommender.interactive_session()
