@@ -165,10 +165,13 @@ class MovieRecommender:
 
             self.graph = user_movie_graph.build_user_movie_graph(ratings)
 
-        except FileNotFoundError as e:
-            raise FileNotFoundError(f"Missing file: {e.filename}")
-        except ValueError as e:
-            raise ValueError(f"Invalid data: {str(e)}")
+        except ValueError as val_err:
+
+            print(f"Input error: {val_err}")
+
+        except RuntimeError as rt_err:
+
+            print(f"Runtime error: {rt_err}")
 
     def get_recommendations(self, current_user: Optional[User]) -> List[Tuple[Movie, float]]:
         """Return a list of tuples with personalized movie recommendations matched to their matching scores and sorted
@@ -244,8 +247,8 @@ class MovieRecommender:
                         print(f"   Genre: {movie.genre} | Rating: {movie.rating:.1f}")
                         print(f"   Director: {movie.director}")
                         print(f"   Stars: {', '.join(movie.lead_actors[:2])}...")
-                except RuntimeError as e:
-                    print(f"Error: {str(e)}")
+                except RuntimeError as runtime_err:
+                    print(f"Error: {str(runtime_err)}")
 
             elif choice == '2':
                 title = input("Enter movie title you've watched: ").strip()
