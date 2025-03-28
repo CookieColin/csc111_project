@@ -166,11 +166,8 @@ class MovieRecommender:
             self.graph = user_movie_graph.build_user_movie_graph(ratings)
 
         except ValueError as val_err:
-
             print(f"Input error: {val_err}")
-
         except RuntimeError as rt_err:
-
             print(f"Runtime error: {rt_err}")
 
     def get_recommendations(self, current_user: Optional[User]) -> List[Tuple[Movie, float]]:
