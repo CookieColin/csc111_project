@@ -128,7 +128,7 @@ class MovieRecommender:
         Raise FileNotFound Error if either input file don't exist and ValueError if csv data is malformed.
         """
         try:
-            with open(movies_file, 'r') as f:
+            with open(movies_file, 'r', encoding="utf-8") as f:
                 reader = csv.reader(f)
                 _ = next(reader)
                 for row in reader:
@@ -150,7 +150,7 @@ class MovieRecommender:
                         votes=int(votes)
                     )
             ratings = []
-            with open(ratings_file, 'r') as f:
+            with open(ratings_file, 'r', encoding="utf-8") as f:
                 reader = csv.reader(f)
                 _ = next(reader)
                 for row in reader:
@@ -166,11 +166,8 @@ class MovieRecommender:
             self.graph = user_movie_graph.build_user_movie_graph(ratings)
 
         except ValueError as val_err:
-
             print(f"Input error: {val_err}")
-
         except RuntimeError as rt_err:
-
             print(f"Runtime error: {rt_err}")
 
     def get_recommendations(self, current_user: Optional[User]) -> List[Tuple[Movie, float]]:
@@ -215,7 +212,7 @@ class MovieRecommender:
             user_input = input("Enter your user ID (or 'new' for new user): ").strip()
 
             if user_input.lower() == 'new':
-                new_id = max(self.users.keys()) + 1
+                new_id = max(self.users.keys(), default=0) + 1
                 self.users[new_id] = User(new_id, set())
                 self.current_user = self.users[new_id]
                 print(f"Created new user with ID: {new_id}")
