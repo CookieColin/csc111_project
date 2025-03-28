@@ -33,10 +33,16 @@ def build_user_movie_graph(user_movie_data):
     for entry in user_movie_data:
         # User_ID, Movie_Title, Rating, Genre ~ 0, 1, 2, 3
         #print(entry)
-        user = entry[0] #"user"
-        movie = entry[1] #"movie"
-        rating = entry[2] #"rating"
-        genre = entry[3] #"genre"
+        if isinstance(entry, dict):
+            user = entry["user"]  # "user"
+            movie = entry["movie"]  # "movie"
+            rating = entry["rating"]  # "rating"
+            genre = entry["genre"]  # "genre"
+        else:
+            user = entry[0]
+            movie = entry[1]
+            rating = entry[2]
+            genre = entry[3]
         if not G.has_node(user):
             G.add_node(user, type="user")
         if not G.has_node(movie):
