@@ -36,10 +36,17 @@ def build_user_movie_graph(user_movie_data: list[dict]) -> nx.Graph:
     """Construct a user-movie graph using networkx."""
     graph = nx.Graph()
     for entry in user_movie_data:
-        user_id = entry["user"]
-        movie_title = entry["movie"]
-        rating = entry["rating"]
-        genre = entry["genre"]
+        if isinstance(entry, dict):
+            user_id = entry["user"]
+            movie_title = entry["movie"]
+            rating = entry["rating"]
+            genre = entry["genre"]
+        else:
+            user_id = entry[0]
+            movie_title = entry[1]
+            rating = entry[2]
+            genre = entry[3]
+
 
         if not graph.has_node(user_id):
             graph.add_node(user_id, type="user")
