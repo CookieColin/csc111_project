@@ -128,7 +128,7 @@ class MovieRecommender:
         Raise FileNotFound Error if either input file don't exist and ValueError if csv data is malformed.
         """
         try:
-            with open(movies_file, 'r') as f:
+            with open(movies_file, 'r', encoding="utf-8") as f:
                 reader = csv.reader(f)
                 _ = next(reader)
                 for row in reader:
@@ -150,7 +150,7 @@ class MovieRecommender:
                         votes=int(votes)
                     )
             ratings = []
-            with open(ratings_file, 'r') as f:
+            with open(ratings_file, 'r', encoding="utf-8") as f:
                 reader = csv.reader(f)
                 _ = next(reader)
                 for row in reader:
@@ -212,7 +212,7 @@ class MovieRecommender:
             user_input = input("Enter your user ID (or 'new' for new user): ").strip()
 
             if user_input.lower() == 'new':
-                new_id = max(self.users.keys()) + 1
+                new_id = max(self.users.keys(), default=0) + 1
                 self.users[new_id] = User(new_id, set())
                 self.current_user = self.users[new_id]
                 print(f"Created new user with ID: {new_id}")
